@@ -37,27 +37,27 @@ public class ControlThread  implements Runnable {
 		switch (controlAction) {
 		case UP:
 			this.controler.upControl(true);
-			ToolMethod.wait_time(newLatch, Constant.CONTROL_WAIT_TIME, "CONTROL_UP");
+			ToolMethod.wait_time(newLatch, Constant.CONTROL_WAIT_TIME, "upControl");
 			this.controler.upControl(false);
 			break;
 		case DOWN:
 			this.controler.downControl(true);
-			ToolMethod.wait_time(newLatch, Constant.CONTROL_WAIT_TIME, "CONTROL_UP");
+			ToolMethod.wait_time(newLatch, Constant.CONTROL_WAIT_TIME, "downControl");
 			this.controler.downControl(false);
 			break;
 		case LEFT:
 			this.controler.leftControl(true);
-			ToolMethod.wait_time(newLatch, Constant.CONTROL_WAIT_TIME, "CONTROL_UP");
+			ToolMethod.wait_time(newLatch, Constant.CONTROL_WAIT_TIME, "leftControl");
 			this.controler.leftControl(false);
 			break;
 		case RIGHT:
 			this.controler.rightControl(true);
-			ToolMethod.wait_time(newLatch, Constant.CONTROL_WAIT_TIME, "CONTROL_UP");
+			ToolMethod.wait_time(newLatch, Constant.CONTROL_WAIT_TIME, "rightControl");
 			this.controler.rightControl(false);
 			break;
 		case ZHUA:
 			this.controler.zhuaControl(true);
-			ToolMethod.wait_time(newLatch, Constant.CONTROL_WAIT_TIME, "CONTROL_UP");
+			ToolMethod.wait_time(newLatch, Constant.ZHUA_WAIT_TIME, "zhuaControl");
 			this.controler.zhuaControl(false);
 			break;
 		case NONE:
@@ -84,6 +84,13 @@ public class ControlThread  implements Runnable {
 			break;
 		case ZHUA:
 			this.controler.zhuaControl(controlBoolean);
+			try {
+				Thread.sleep(Constant.ZHUA_WAIT_TIME);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.controler.zhuaControl(false);
 			break;
 		case NONE:
 			break;

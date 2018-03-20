@@ -11,10 +11,16 @@ public class Constant {
   	  NONE,UP, DOWN, LEFT, RIGHT,ZHUA,LIGHTIN,LIGHTOUT,START
     }
     public static final int CONTROL_WAIT_TIME = 500;
+    public static final int ZHUA_WAIT_TIME = 50;
+    public static final int RESULT_WAIT_TIME = 8000;
     public static final int SIG_WAIT_TIME = 20000;
     public static final String APP_ID = "d954a23118b94ecd9dcdb67b0718d077";
     public static final String SIG_NAME = "wawaji_user";
 	public static Object WORKTHREAD_LOCK=new Object();
     public static String CHANNEL_NAME = "test_channel_name";
-
+    
+    
+    //command
+    public static String RESULT_COMMAND_FALSE = "{\"type\":\"RESULT\",\"result\":false}";
+    public static String RESULT_COMMAND_TRUE = "{\"type\":\"RESULT\",\"result\":true}";
 }

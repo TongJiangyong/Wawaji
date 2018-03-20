@@ -1,10 +1,13 @@
 package wawaji;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 
 import control.GpioControl;
 import control.MyGpioPinListenerDigital;
 import control.SignalControl;
+import utils.Constant;
 import utils.Constant.Action;
 import utils.ToolMethod;
 
@@ -12,14 +15,14 @@ public class WorkThread  implements Runnable {
 	private GpioControl controler =null;
 	private SignalControl signalControl = null;
 	private ControlThread controlThread = null; 
+	private MyGpioPinListenerDigital lightInListenr  = null;
 	public WorkThread() {
 		// TODO Auto-generated constructor stub
 		System.out.println("**********systerm start****************");
-		MyGpioPinListenerDigital lightOut = new MyGpioPinListenerDigital(Action.LIGHTOUT);
-		MyGpioPinListenerDigital lightIn = new MyGpioPinListenerDigital(Action.LIGHTIN);
-		this.controler = new GpioControl(lightOut,lightIn);
-		controlThread = new ControlThread(this.controler);
+		this.lightInListenr = new MyGpioPinListenerDigital(Action.LIGHTIN);
 		this.signalControl = new SignalControl();
+		this.controler = new GpioControl(lightInListenr);
+		controlThread = new ControlThread(this.controler);
 		this.ctrlCHandler();
 		System.out.println("**********video start****************");
 		//this.startVedio();
@@ -105,10 +108,6 @@ public class WorkThread  implements Runnable {
 	
 	
 	private void test() throws InterruptedException{
-		MyGpioPinListenerDigital lightOut = new MyGpioPinListenerDigital(Action.LIGHTOUT);
-		MyGpioPinListenerDigital lightIn = new MyGpioPinListenerDigital(Action.LIGHTIN);
-		GpioControl controler = new GpioControl(lightOut,lightIn);
-		
 		//∏© ”
 		System.out.println("**********up****************");
 		controler.upControl(true);
@@ -130,6 +129,30 @@ public class WorkThread  implements Runnable {
 			Thread.sleep(1000);
 		}
 	}
+
+	
+	public void checkResult() {
+		// TODO Auto-generated method stub
+		System.out.println("**********check catch Result****************");
+		this.delayCheck();
+		
+	}
+
+    private void delayCheck() {  
+        Timer timer = new Timer();  
+        timer.schedule(new TimerTask() {  
+            public void run() {  
+            	if(lightInListenr.isCatched()){
+            		System.out.println("**********get wawa****************");
+            		signalControl.sigChanneltMsg(Constant.RESULT_COMMAND_TRUE);
+            	}else{
+            		System.out.println("**********get none****************");
+            		signalControl.sigChanneltMsg(Constant.RESULT_COMMAND_FALSE);
+            	}
+            	lightInListenr.setCatched(false);
+            }  
+        }, Constant.RESULT_WAIT_TIME);
+    }  
 
 
 }

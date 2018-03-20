@@ -14,7 +14,7 @@ import utils.Constant.Action;
 import utils.ToolMethod;
 import wawaji.WorkThread;
 
-public class SignalControl {
+public class SignalControl{
 
 	private Signal sig = null;
 	private Signal.LoginSession sigSession = null;
@@ -90,12 +90,12 @@ public class SignalControl {
 
             @Override
             public void onChannelUserJoined(Signal.LoginSession session, Signal.LoginSession.Channel channel, String account, int uid) {
-            	System.out.println("******************onChannelUserJoined uid:"+uid+"**********************");
+            	System.out.println("******************onChannelUserJoined uid:"+(uid& 0xFFFFFFFFL)+"**********************");
             }
 
             @Override
             public void onChannelUserLeaved(Signal.LoginSession session, Signal.LoginSession.Channel channel, String account, int uid) {
-            	System.out.println("******************onChannelUserLeaved uid:"+uid+"**********************");
+            	System.out.println("******************onChannelUserLeaved uid:"+(uid& 0xFFFFFFFFL)+"**********************");
             }
 
             @Override
@@ -121,7 +121,7 @@ public class SignalControl {
         	  System.out.println("******************onMessageSendError**********************");
           }
       });*/
-  	  System.out.println("***************sigChanneltMsg**************"+command+"***********");
+    	System.out.println("***************sigChanneltMsg**************"+command+"***********");
         this.channel.messageChannelSend(command);
   }
     
@@ -160,7 +160,9 @@ public class SignalControl {
             
         }else if(type.equals("CATCH")){
             System.out.println("***********CATCH:***********");
-        	this.workThread.getControlThread().doAction(Action.ZHUA);
+            //this.workThread.getControlThread().setNewLatch(new CountDownLatch(1));
+        	this.workThread.getControlThread().doAction(Action.ZHUA,true);
+        	this.workThread.checkResult();
         }else{
             System.out.println("***********other control***********");
         }

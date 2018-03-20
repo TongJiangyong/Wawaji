@@ -25,17 +25,17 @@ public class GpioControl {
     public static final GpioPinDigitalOutput outputZhua=GPIOCONTROLLER.provisionDigitalOutputPin(RaspiPin.GPIO_06, PinState.LOW); //爪
     
     
-    public static final GpioPinDigitalInput inputLightOut = GPIOCONTROLLER.provisionDigitalInputPin(RaspiPin.GPIO_00); //光眼出
-    public static final GpioPinDigitalInput inputLightIn = GPIOCONTROLLER.provisionDigitalInputPin(RaspiPin.GPIO_07); //光眼入
+    public static final GpioPinDigitalInput LightIn = GPIOCONTROLLER.provisionDigitalInputPin(RaspiPin.GPIO_00); //光眼入
+    public static final GpioPinDigitalOutput LightOut = GPIOCONTROLLER.provisionDigitalOutputPin(RaspiPin.GPIO_07, PinState.HIGH); //光眼出
     
 
     private Action currentAction = Action.NONE;
     
-    public GpioControl(MyGpioPinListenerDigital lightOut,MyGpioPinListenerDigital lightIn){
-    	this.initGPIO(lightOut, lightIn);
+    public GpioControl(MyGpioPinListenerDigital lightInLister){
+    	this.initGPIO(lightInLister);
     }
 
-	private void initGPIO(MyGpioPinListenerDigital lightOut,MyGpioPinListenerDigital lightIn){
+	private void initGPIO(MyGpioPinListenerDigital lightInLister){
     	//output pin
     	outputUp.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
     	outputDown.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
@@ -45,8 +45,12 @@ public class GpioControl {
     	//input pin
 /*    	inputLightOut.addListener(new MyGpioPinListenerDigital(Action.LIGHTOUT));
     	inputLightIn.addListener(new MyGpioPinListenerDigital(Action.LIGHTIN));*/
-    	inputLightOut.addListener(lightOut);
-    	inputLightIn.addListener(lightIn);
+    	LightOut.setShutdownOptions(true, PinState.HIGH, PinPullResistance.OFF);
+    	lightInLister.setOutputGpio(LightOut);
+    	LightIn.addListener(lightInLister);
+    	LightIn.setShutdownOptions(true);
+
+    	//inputLightIn.addListener(lightIn);
     	this.resetAction();
     }
     
@@ -74,7 +78,7 @@ public class GpioControl {
     
     public void upControl(boolean isAction){
     	if(this.getCurrentAction()!=Action.UP){
-    		setAllOutputGpioLow();
+    		//setAllOutputGpioLow();
     		this.setCurrentAction(Action.UP);
     	}
     	if(isAction){
@@ -90,7 +94,7 @@ public class GpioControl {
     public void downControl(boolean isAction){
     	//如果不是当前的动作，则清掉所有的GPIO状态，并重置状态
     	if(this.getCurrentAction()!=Action.DOWN){
-    		setAllOutputGpioLow();
+    		//setAllOutputGpioLow();
     		this.setCurrentAction(Action.DOWN);
     	}
     	if(isAction){
@@ -105,7 +109,7 @@ public class GpioControl {
     
     public void leftControl(boolean isAction){
     	if(this.getCurrentAction()!=Action.LEFT){
-    		setAllOutputGpioLow();
+    		//setAllOutputGpioLow();
     		this.setCurrentAction(Action.LEFT);
     	}
     	if(isAction){
@@ -120,7 +124,7 @@ public class GpioControl {
     
     public void rightControl(boolean isAction){
     	if(this.getCurrentAction()!=Action.RIGHT){
-    		setAllOutputGpioLow();
+    		//setAllOutputGpioLow();
     		this.setCurrentAction(Action.RIGHT);
     	}
     	if(isAction){
@@ -135,7 +139,7 @@ public class GpioControl {
     
     public void zhuaControl(boolean isAction){
     	if(this.getCurrentAction()!=Action.ZHUA){
-    		setAllOutputGpioLow();
+    		//setAllOutputGpioLow();
     		this.setCurrentAction(Action.ZHUA);
     	}
     	if(isAction){
