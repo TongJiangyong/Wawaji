@@ -48,6 +48,8 @@ public class SignalControl{
             @Override
             public void onLogout(Signal.LoginSession session, int ecode) {
             	ToolMethod.printToScreen("******************sigLogout success**********************");
+                //sig.login(Constant.SIG_NAME,"_no_need_token",channel);
+                sigLogin();
             }
             
         });
