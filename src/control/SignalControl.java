@@ -3,6 +3,8 @@ package control;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import javax.tools.Tool;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -22,6 +24,7 @@ public class SignalControl{
 	private WorkThread workThread = null;
 	public SignalControl(){
         this.sig = new Signal(Constant.APP_ID);
+        //this.sig.setDoLog(true);
 	}
 	
 	
@@ -31,20 +34,20 @@ public class SignalControl{
 
 
 	public void sigLogin(){
-    	System.out.println("******************sigLogin**********************");
+    	ToolMethod.printToScreen("******************sigLogin**********************");
         final CountDownLatch loginLatch = new CountDownLatch(1);
         //final CountDownLatch logoutLatch = new CountDownLatch(1);
         sig.login(Constant.SIG_NAME, "_no_need_token", new Signal.LoginCallback() {
             @Override
             public void onLoginSuccess(final Signal.LoginSession session, int uid) {
-            	System.out.println("******************sigLogin success**********************");
+            	ToolMethod.printToScreen("******************sigLogin success**********************");
             	sigSession = session;
                 loginLatch.countDown();
             }
 
             @Override
             public void onLogout(Signal.LoginSession session, int ecode) {
-            	System.out.println("******************sigLogout success**********************");
+            	ToolMethod.printToScreen("******************sigLogout success**********************");
             }
             
         });
@@ -52,7 +55,7 @@ public class SignalControl{
         if(loginLatch.getCount()!=1){
     		this.joinChannel(Constant.CHANNEL_NAME);    	
         }else{
-        	System.out.println("******************joinChannel error**********************");
+        	ToolMethod.printToScreen("******************joinChannel error**********************");
         	this.leaveChannel();
         }
 
@@ -72,7 +75,7 @@ public class SignalControl{
         this.channel = this.sigSession.channelJoin(channelName, new Signal.ChannelCallback() {
             @Override
             public void onChannelJoined(Signal.LoginSession session, Signal.LoginSession.Channel channel) {
-            	System.out.println("******************onChannelJoined sucess**********************");
+            	ToolMethod.printToScreen("******************onChannelJoined sucess**********************");
             	channelJoindLatch.countDown();
             }
 
@@ -84,23 +87,25 @@ public class SignalControl{
 
             @Override
             public void onMessageChannelReceive(Signal.LoginSession session, Signal.LoginSession.Channel channel, String account, int uid, String msg) {
-                 System.out.println("********"+account + ":" + msg+"********");
+                 ToolMethod.printToScreen("********"+account + ":" + msg+"********");
+                 ToolMethod.useFileOutPut();
                  infoDeal(msg);
+                 ToolMethod.useStandOutPut();
             }
 
             @Override
             public void onChannelUserJoined(Signal.LoginSession session, Signal.LoginSession.Channel channel, String account, int uid) {
-            	System.out.println("******************onChannelUserJoined uid:"+(uid& 0xFFFFFFFFL)+"**********************");
+            	ToolMethod.printToScreen("******************onChannelUserJoined uid:"+(uid& 0xFFFFFFFFL)+"**********************");
             }
 
             @Override
             public void onChannelUserLeaved(Signal.LoginSession session, Signal.LoginSession.Channel channel, String account, int uid) {
-            	System.out.println("******************onChannelUserLeaved uid:"+(uid& 0xFFFFFFFFL)+"**********************");
+            	ToolMethod.printToScreen("******************onChannelUserLeaved uid:"+(uid& 0xFFFFFFFFL)+"**********************");
             }
 
             @Override
             public void onChannelLeaved(Signal.LoginSession session, Signal.LoginSession.Channel channel, int ecode) {
-            	System.out.println("******************onChannelLeaved**********************");
+            	ToolMethod.printToScreen("******************onChannelLeaved**********************");
             }
 
         });
@@ -112,16 +117,16 @@ public class SignalControl{
 /*    	this.sigSession.messageInstantSend(opponentName, command, new Signal.MessageCallback(){
           @Override
           public void onMessageSendSuccess(Signal.LoginSession session) {
-              System.out.println("******************onMessageSendSuccess**********************");
+              ToolMethod.printToScreen("******************onMessageSendSuccess**********************");
 
           }
 
           @Override
           public void onMessageSendError(Signal.LoginSession session, int ecode) {
-        	  System.out.println("******************onMessageSendError**********************");
+        	  ToolMethod.printToScreen("******************onMessageSendError**********************");
           }
       });*/
-    	System.out.println("***************sigChanneltMsg**************"+command+"***********");
+    	ToolMethod.printToScreen("***************sigChanneltMsg**************"+command+"***********");
         this.channel.messageChannelSend(command);
   }
     
@@ -131,40 +136,40 @@ public class SignalControl{
         JsonObject obj = jElem.getAsJsonObject();
         jElem = obj.get("type");
         String type = jElem.getAsString();
-        System.out.println("***********TYPE:"+type+"***********");
+        ToolMethod.printToScreen("***********TYPE:"+type+"***********");
         if(type.equals("CONTROL")){
             jElem = obj.get("data");
             String data = jElem.getAsString();
-            System.out.println("***********data:"+data+"***********");
+            ToolMethod.printToScreen("***********data:"+data+"***********");
             if(data.equals("up")){
             	jElem = obj.get("pressed");	
             	boolean pressed = jElem.getAsBoolean();
-                System.out.println("***********up pressed:"+pressed+"***********");
+                ToolMethod.printToScreen("***********up pressed:"+pressed+"***********");
             	this.workThread.getControlThread().doAction(Action.UP,pressed);
             }else if(data.equals("down")){
             	jElem = obj.get("pressed");	
             	boolean pressed = jElem.getAsBoolean();
-                System.out.println("***********down pressed:"+pressed+"***********");
+                ToolMethod.printToScreen("***********down pressed:"+pressed+"***********");
             	this.workThread.getControlThread().doAction(Action.DOWN,pressed); 	
             }else if(data.equals("left")){
             	jElem = obj.get("pressed");	
             	boolean pressed = jElem.getAsBoolean();
-                System.out.println("***********left pressed:"+pressed+"***********");
+                ToolMethod.printToScreen("***********left pressed:"+pressed+"***********");
             	this.workThread.getControlThread().doAction(Action.LEFT,pressed);
             }else if(data.equals("right")){
             	jElem = obj.get("pressed");	
             	boolean pressed = jElem.getAsBoolean();
-                System.out.println("***********right pressed:"+pressed+"***********");
+                ToolMethod.printToScreen("***********right pressed:"+pressed+"***********");
             	this.workThread.getControlThread().doAction(Action.RIGHT,pressed);
             }
             
         }else if(type.equals("CATCH")){
-            System.out.println("***********CATCH:***********");
+            ToolMethod.printToScreen("***********CATCH:***********");
             //this.workThread.getControlThread().setNewLatch(new CountDownLatch(1));
         	this.workThread.getControlThread().doAction(Action.ZHUA,true);
         	this.workThread.checkResult();
         }else{
-            System.out.println("***********other control***********");
+            ToolMethod.printToScreen("***********other control***********");
         }
     }
 }

@@ -1,10 +1,13 @@
 package utils;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.PrintStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -44,5 +47,34 @@ public class ToolMethod {
         }  
         return null;  
     }  
+    
+    public static void deleteLogFile(){
+		File f = new File(Constant.OUTPUTFILE);  // 输入要删除的文件位置
+		if(f.exists())
+		    f.delete();
+    }
+    
+    public static void useFileOutPut(){
+        try {
+        	if(Constant.FILE_OUTPUT ==null){
+        		Constant.FILE_OUTPUT =new PrintStream(Constant.OUTPUTFILE); // 创建文件输出流2
+        	}
+        	
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        System.setOut(Constant.FILE_OUTPUT);// 设置使用新的输出流
+    }
+    
+    public static void useStandOutPut(){
+        System.setOut(Constant.STAND_OUTPUT);// 设置使用新的输出流
+    }
+    
+    public static void printToScreen(String logInfo){
+    	useStandOutPut();
+    	System.out.println(logInfo);
+    	useFileOutPut();
+    }
    
 }

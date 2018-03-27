@@ -11,6 +11,7 @@ import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 import utils.Constant.Action;
+import utils.ToolMethod;
 
 //使用一个异步的线程来控制control的每一次过程......
 
@@ -83,7 +84,7 @@ public class GpioControl {
     	}
     	if(isAction){
     		this.setCurrentAction(Action.UP);
-    		System.out.println("**********UP****************");
+    		ToolMethod.printToScreen("**********UP****************");
     		outputUp.high();
     	}else{
     		this.resetAction();
@@ -99,7 +100,7 @@ public class GpioControl {
     	}
     	if(isAction){
     		this.setCurrentAction(Action.DOWN);
-    		System.out.println("**********DOWN****************");
+    		ToolMethod.printToScreen("**********DOWN****************");
     		outputDown.high();
     	}else{
     		this.resetAction();
@@ -114,7 +115,7 @@ public class GpioControl {
     	}
     	if(isAction){
     		this.setCurrentAction(Action.LEFT);
-    		System.out.println("**********LEFT****************");
+    		ToolMethod.printToScreen("**********LEFT****************");
     		outputLeft.high();
     	}else{
     		this.resetAction();
@@ -128,7 +129,7 @@ public class GpioControl {
     		this.setCurrentAction(Action.RIGHT);
     	}
     	if(isAction){
-    		System.out.println("**********RIGHT****************");
+    		ToolMethod.printToScreen("**********RIGHT****************");
     		this.setCurrentAction(Action.RIGHT);
     		outputRight.high();
     	}else{
@@ -143,7 +144,7 @@ public class GpioControl {
     		this.setCurrentAction(Action.ZHUA);
     	}
     	if(isAction){
-    		System.out.println("**********ZHUA****************");
+    		ToolMethod.printToScreen("**********ZHUA****************");
     		this.setCurrentAction(Action.ZHUA);
     		outputZhua.high();
     	}else{

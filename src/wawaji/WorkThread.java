@@ -18,13 +18,13 @@ public class WorkThread  implements Runnable {
 	private MyGpioPinListenerDigital lightInListenr  = null;
 	public WorkThread() {
 		// TODO Auto-generated constructor stub
-		System.out.println("**********systerm start****************");
+		ToolMethod.printToScreen("**********systerm start****************");
 		this.lightInListenr = new MyGpioPinListenerDigital(Action.LIGHTIN);
 		this.signalControl = new SignalControl();
 		this.controler = new GpioControl(lightInListenr);
 		controlThread = new ControlThread(this.controler);
 		this.ctrlCHandler();
-		System.out.println("**********video start****************");
+		ToolMethod.printToScreen("**********video start****************");
 		//this.startVedio();
 	}
 	
@@ -42,14 +42,14 @@ public class WorkThread  implements Runnable {
 			}		
 		}
 		this.controler.shutdownGPIO();
-        System.out.println("**********systerm end****************");   
+        ToolMethod.printToScreen("**********systerm end****************");   
 	}
 	
 	public void releaseThread(){
 		this.signalControl.leaveChannel();
-        System.out.println("**********leaveChannel success****************");   
+        ToolMethod.printToScreen("**********leaveChannel success****************");   
 		this.controlThread.releaseControlThread();
-        System.out.println("**********releaseControlThread success****************");   
+        ToolMethod.printToScreen("**********releaseControlThread success****************");   
 		//this.endVedio();
 		synchronized(this){
 			try {
@@ -67,7 +67,7 @@ public class WorkThread  implements Runnable {
             super("Exit Handler");  
         }  
         public void run() {  
-            System.out.println("ctrlC Set exit");   
+            ToolMethod.printToScreen("ctrlC Set exit");   
             releaseThread();
         }  
     }  
@@ -109,19 +109,19 @@ public class WorkThread  implements Runnable {
 	
 	private void test() throws InterruptedException{
 		//∏© ”
-		System.out.println("**********up****************");
+		ToolMethod.printToScreen("**********up****************");
 		controler.upControl(true);
 		Thread.sleep(1000);		
-		System.out.println("**********down****************");
+		ToolMethod.printToScreen("**********down****************");
 		controler.downControl(true);
 		Thread.sleep(1000);
-		System.out.println("**********right****************");
+		ToolMethod.printToScreen("**********right****************");
 		controler.rightControl(true);
 		Thread.sleep(1000);
-		System.out.println("**********left****************");
+		ToolMethod.printToScreen("**********left****************");
 		controler.leftControl(true);
 		Thread.sleep(1000);
-		System.out.println("**********zhua****************");
+		ToolMethod.printToScreen("**********zhua****************");
 		controler.zhuaControl(true);
 		controler.shutdownGPIO();
 		
@@ -133,7 +133,7 @@ public class WorkThread  implements Runnable {
 	
 	public void checkResult() {
 		// TODO Auto-generated method stub
-		System.out.println("**********check catch Result****************");
+		ToolMethod.printToScreen("**********check catch Result****************");
 		this.delayCheck();
 		
 	}
@@ -143,10 +143,10 @@ public class WorkThread  implements Runnable {
         timer.schedule(new TimerTask() {  
             public void run() {  
             	if(lightInListenr.isCatched()){
-            		System.out.println("**********get wawa****************");
+            		ToolMethod.printToScreen("**********get wawa****************");
             		signalControl.sigChanneltMsg(Constant.RESULT_COMMAND_TRUE);
             	}else{
-            		System.out.println("**********get none****************");
+            		ToolMethod.printToScreen("**********get none****************");
             		signalControl.sigChanneltMsg(Constant.RESULT_COMMAND_FALSE);
             	}
             	lightInListenr.setCatched(false);

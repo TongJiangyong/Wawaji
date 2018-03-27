@@ -8,6 +8,7 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 import utils.Constant;
 import utils.Constant.Action;
+import utils.ToolMethod;
 
 public class MyGpioPinListenerDigital implements GpioPinListenerDigital {
     private Action inputType = null;
@@ -21,7 +22,7 @@ public class MyGpioPinListenerDigital implements GpioPinListenerDigital {
 
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-        System.out.println("input stats:"+event.getState()+" this.inputType:"+this.inputType);
+        ToolMethod.printToScreen("input stats:"+event.getState()+" this.inputType:"+this.inputType);
         if(event.getState()==PinState.HIGH){
         	lightOut.low();
         }else if(event.getState()==PinState.LOW){

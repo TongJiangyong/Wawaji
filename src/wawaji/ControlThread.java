@@ -20,7 +20,7 @@ public class ControlThread  implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		System.out.println("**********ControlThread start****************"); 
+		ToolMethod.printToScreen("**********ControlThread start****************"); 
 		synchronized(this){
 			try {
 				this.wait();
@@ -30,7 +30,7 @@ public class ControlThread  implements Runnable {
 			}		
 		}
 
-		System.out.println("**********ControlThread end****************");   
+		ToolMethod.printToScreen("**********ControlThread end****************");   
 	}
 
 	public void doAction(Action controlAction){
