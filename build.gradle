@@ -5,3 +5,21 @@ sourceSets {
     test.java.srcDirs = ['tests/java']
     test.resources.srcDirs = ['tests/resources']
 }
+
+task createExecutableJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'wawaji.Main'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.pi4j:pi4j-core:1.1'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile fileTree(dir: 'libs', include: '*.jar')
+}
